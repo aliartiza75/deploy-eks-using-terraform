@@ -1,0 +1,34 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: logging-kibana
+  namespace: logging
+spec:
+  releaseName: logging-kibana
+  chart:
+    repository: https://kubernetes-charts.storage.googleapis.com
+    name: kibana
+    version: 3.2.4
+  values:
+    image:
+      tag: 6.8.5
+    files:
+      kibana.yml:
+        server.name: kibana
+        server.host: "0.0.0.0"
+        server.port: 5601
+        elasticsearch.hosts: http://elasticsearch-master.logging:9200
+        elasticsearch.requestTimeout: 1200000
+        
+    service:
+      externalPort: 80
+      labels:
+        expose: "true"
+    
+    resources:
+      limits:
+        cpu: 200m
+        memory: 600Mi
+      requests:
+        cpu: 100m
+        memory: 300Mi

@@ -44,6 +44,15 @@ spec:
                 annotations:
                   summary: "Server memory is almost full {{ $labels.node }}"
                   description: "Host memory usage is {{ humanize $value}}%. Reported by instance {{ $labels.instance }} of job {{ $labels.job }}."
+              
+              - alert: Elasticsearch cluster status Test Alarm
+                expr: elasticsearch_cluster_health_up > 0
+                for: 5s
+                labels:
+                  severity: critical
+                annotations:
+                  summary: "False alarm. Elasticsearch cluster is up"
+                  description: "False alarm. Elasticsearch cluster is up"
 
       - additionalLabels:
           kind: infra

@@ -1,0 +1,26 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: es-to-prom-exporter
+  namespace: logging
+spec:
+  releaseName: es-to-prom-exporter
+  chart:
+    repository: https://kubernetes-charts.storage.googleapis.com
+    name: elasticsearch-exporter
+    version: 3.0.0
+  values:
+    es:
+      uri: http://elasticsearch-client:9200
+    prometheusRule:
+      enabled: false
+      namespace: monitoring
+      labels:
+        exporter: es-to-prom
+
+    serviceMonitor:
+      enabled: true
+      namespace: monitoring
+      labels:
+        release: prometheus-operator
+    
