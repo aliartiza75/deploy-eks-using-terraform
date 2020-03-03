@@ -20,7 +20,6 @@ spec:
     defaultRules:
       labels:
         kind: infra
-
     additionalPrometheusRules:
       - name: infra-rules
         additionalLabels:
@@ -53,44 +52,6 @@ spec:
                 annotations:
                   summary: "False alarm. Elasticsearch cluster is up"
                   description: "False alarm. Elasticsearch cluster is up"
-
-      - additionalLabels:
-          kind: infra
-        groups:
-          - name: Fluentd
-            rules:
-              - alert: IncreasedFluentdRetryWait
-                annotations:
-                  description: 'Fluentd Output Status Retry Wait has increased from 1000 in 1 minute'
-                  summary: Retry Wait Increased {{ $labels.kind }}
-                expr: max_over_time(fluentd_output_status_retry_wait[1m]) > 1000
-                for: 20s
-                labels:
-                  kind: infra
-                  severity: critical
-              - alert: IncreasedFluentdRetryCount
-                annotations:
-                  description:
-                    Rate of Fluentd Output Retry Count has increased from 0.5 in
-                    1m
-                  summary: Retry Wait Increased
-                expr: rate(fluentd_output_status_retry_count[1m]) > 0.5
-                for: 20s
-                labels:
-                  kind: infra
-                  severity: critical
-              - alert: IncreasedFluentdOutputBufferLength
-                annotations:
-                  description:
-                    Fluentd Output Status Buffer Queue length has increased from
-                    500.
-                  summary: Fluentd Buffer Queue length Increased - {{ $externalLabels.kind }}
-                expr: max_over_time(fluentd_output_status_buffer_queue_length[1m]) > 500
-                for: 10s
-                labels:
-                  kind: infra
-                  severity: critical
-        name: fluentd-rules
 
     commonLabels:
       expose: "true"
@@ -167,20 +128,6 @@ spec:
       tolerations: []
 
     prometheus:
-      additionalServiceMonitors:
-        - endpoints:
-            - interval: 20s
-              path: /metrics
-              port: monitor-agent
-              scheme: http
-          jobLabel: k8s-app
-          name: monitoring-fluentd
-          namespaceSelector:
-            matchNames:
-              - logging
-          selector:
-            matchLabels:
-              app.kubernetes.io/name: fluentd-elasticsearch
       enabled: true
       externalIPs: []
       hosts: []
@@ -284,18 +231,6 @@ spec:
 
     grafana:
       adminPassword: "qwerty786"
-      # admin:
-      #   existingSecret: "grafana-credentials"
-      #   userKey: "admin-user"
-      #   passwordKey: "admin-password"
-      # ingress:
-      #   enabled: "false"
-        # hosts:
-        #   - grafana-monitoring.DOMAIN
-        # tls:
-        #   - hosts:
-        #       - grafana-monitoring.DOMAIN
-        #     secretName: tls-cert
       rbac:
         create: true
         namespaced: true
@@ -402,7 +337,7 @@ spec:
             - match:
                 alertname: Watchdog
               receiver: "null"
-      enabled: true
+      enabled: false
       ingress:
         annotations: {}
         enabled: false

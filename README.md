@@ -235,6 +235,11 @@ kubectl get svc -n monitoring # this time change service will have an External I
 
 ```
 
+13. An alert has been configured
+
+![alert](./images/alert.png)
+
+
 
 
 ### 5. logging
@@ -285,6 +290,9 @@ kubectl edit svc <kibana-service-name> -n logging
 kubectl get svc -n logging # use the value provided in ExternalIP column to access kibana
 ```
 
+### 6. es-to-prom-exporter
+
+This fode
 
 
 ## PART-II
@@ -320,3 +328,7 @@ https://docs.aws.amazon.com/eks/latest/userguide/dashboard-tutorial.html
 https://github.com/kubernetes-sigs/metrics-server/releases/tag/v0.2.1
 
 https://github.com/helm/charts/tree/master/stable/elasticsearch-exporter
+
+https://www.robustperception.io/sending-email-with-the-alertmanager-via-gmail
+
+https://eksworkshop.com/beginner/130_exposing-service/exposing/
