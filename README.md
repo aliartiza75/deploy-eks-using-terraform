@@ -315,5 +315,7 @@ Alerts is being triggered by prometheus but i was not able to generate a notific
 Following resource were used:
 
 https://docs.aws.amazon.com/eks/latest/userguide/dashboard-tutorial.html
+
 https://github.com/kubernetes-sigs/metrics-server/releases/tag/v0.2.1
+
 https://github.com/helm/charts/tree/master/stable/elasticsearch-exporter
