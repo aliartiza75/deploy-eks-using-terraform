@@ -157,7 +157,6 @@ It contains the manifest for the monitoring services. Detials of this folder is 
 
 #### Deployment
 
-
 1. Move inside the dashboard folder and run command to deploy resource required by dashboard:
 
 ```bash
@@ -235,7 +234,13 @@ kubectl get svc -n monitoring # this time change service will have an External I
 
 ```
 
+13. An alert has been configured. I have intentionally configured this alert to be generated.
 
+![alert](./images/alert.png).
+
+It rules is added in the `monitoring/prometheus-operator/prometheus-operator.yaml` manifest:
+
+![image](./images/rule.png)
 
 ### 5. logging
 
@@ -285,6 +290,25 @@ kubectl edit svc <kibana-service-name> -n logging
 kubectl get svc -n logging # use the value provided in ExternalIP column to access kibana
 ```
 
+### 6. es-to-prom-exporter
+
+This folder contains the manifest to deploy the es metrics exporter. Details of the folder is given below:
+
+```bash
+└── es-to-prom-exoporter.yaml
+```
+
+#### Deployment
+
+1. To deploy the exporter run the command given below:
+
+```bash
+kubectl apply -f es-to-prom-exporter.yaml
+```
+
+2. It it is deployed correctly, a target will be added in the prometheus:
+![target](./images/target.png)
+
 
 
 ## PART-II
@@ -320,3 +344,7 @@ https://docs.aws.amazon.com/eks/latest/userguide/dashboard-tutorial.html
 https://github.com/kubernetes-sigs/metrics-server/releases/tag/v0.2.1
 
 https://github.com/helm/charts/tree/master/stable/elasticsearch-exporter
+
+https://www.robustperception.io/sending-email-with-the-alertmanager-via-gmail
+
+https://eksworkshop.com/beginner/130_exposing-service/exposing/
