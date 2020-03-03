@@ -27,8 +27,8 @@ module "eks-cluster" {
   worker_groups = [
     {
       spot_price = "0.20"
-      asg_desired_capacity = 1
-      asg_max_size = 3
+      asg_desired_capacity = 3
+      asg_max_size = 4
       asg_min_size = 1
       instance_type = "m4.large"
       name = "worker-group"

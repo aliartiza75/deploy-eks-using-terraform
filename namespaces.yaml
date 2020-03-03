@@ -2,9 +2,9 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: flux
+  name: helmoperator
   labels:
-    name: flux-development
+    name: helmoperator
 ---
 apiVersion: v1
 kind: Namespace
