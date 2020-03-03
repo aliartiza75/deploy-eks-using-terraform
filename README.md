@@ -40,7 +40,7 @@ It contains the manifest regarding the cluster infrastructure. Detials of this f
     └── terraform.tfstate.backup # it contains the backup of terraform's state
 ```
 
-* Deployment
+##### Deployment
 
 1. For the deployment of the above resource we need following tools/utilities
 
@@ -67,7 +67,7 @@ It will create a user in AWS with limited access.
 ```bash
 terraform apply # it will output the plan for resources creation and ask for permission to create the resources.
 
-# i will create three files, two of them contains the terraform state while another files contains the eks cluster kubeconfig. In the above apply command 1 step might fail. It can be resolved by adding the kubeconfig in this file on your system `~/.kube/config`. Once added re-run the above command. 
+# it will create three files, two of them contains the terraform state while another files contains the eks cluster kubeconfig. In the above apply command 1 step might fail. It can be resolved by adding the kubeconfig in this file on your system `~/.kube/config`. Once added re-run the above command. 
 ```
 
 4. Once above steps are completed we will have a user with limited access to create an eks cluster and a runnnig eks cluster.
@@ -78,6 +78,16 @@ kubectl get nodes # it will output the cluster nodes based on the configuration 
 ```
 
 ### 2. mysql
+
+It contains the manifest for mysql. Detials of this folder is given below:
+
+```bash
+├── mysql.yaml # it contains the manifest for the mysql
+└── secrets
+    └── mysql-passwords.yaml # it contains the configuration for the mysql database. It will be used in mysql.yaml file.
+```
+
+
 
 ### 3. monitoring
 ### 4. logging
