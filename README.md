@@ -238,7 +238,7 @@ kubectl get svc -n monitoring # this time change service will have an External I
 
 ![alert](./images/alert.png).
 
-It rules is added in the monitoring/prometheus-operator/prometheus-operator.yaml manifest
+It rules is added in the `monitoring/prometheus-operator/prometheus-operator.yaml` manifest:
 
 ![image](./images/rule.png)
 
