@@ -295,15 +295,15 @@ kubectl get svc -n logging # use the value provided in ExternalIP column to acce
 
 - How would you setup backups for mysql in production?
 
-    I will run a [sidecar container](https://github.com/stakater-docker/mysql-restore-backup) in the mysql pod. That will take the backup of the data in the mysql and push it on the AWS S3 bucket.
+    1. I will run a [sidecar container](https://github.com/stakater-docker/mysql-restore-backup) in the mysql pod. That will take the backup of the data in the mysql and push it on the AWS S3 bucket.
 
 - How would you setup failover of mysql for production in k8s? How many nodes?
 
-    I would deploy a mysql cluster with atleast two nodes. The nodes needs to be deployed on different kubernetes cluster nodes. So that if one node goes down the other is available. Those node should also be spread across multiple avalibility zones. So that if one avalibility zone goes down the other is not affected. 
+    1. I would deploy a mysql cluster with atleast two nodes. The nodes needs to be deployed on different kubernetes cluster nodes. So that if one node goes down the other is available. Those node should also be spread across multiple avalibility zones. So that if one avalibility zone goes down the other is not affected. 
 
-    Another things that can be done is to assign the mysql pods priority status so that due to some descheduling process(due to resource utilization process) in the cluster doesn't cause the redeployment of the pod on another node. 
+    2. Another things that can be done is to assign the mysql pods priority status so that due to some descheduling process(due to resource utilization process) in the cluster doesn't cause the redeployment of the pod on another node. 
 
-    Another thing that can be done is by using the by adding few nodes in the cluster that are only assigned for high priority services like database. It can be ensured by using taint and tolerations.
+    3. Another thing that can be done is by using the by adding few nodes in the cluster that are only assigned for high priority services like database. It can be ensured by using taint and tolerations.
 
 
 ## REMAINING TASK
