@@ -4,6 +4,8 @@
 
 This repository contains the mainfest of the trial task given by Payever team.
 
+## PART-I
+
 ### Repository Structure
 
 The root repository contains the following files and folders.
@@ -18,12 +20,35 @@ The root repository contains the following files and folders.
 └── README.md
 ```
 
+### Tools/Utilities Required
+
+List of tools/utilities are given below:
+
+1. aws
+2. kubectl
+3. aws-iam-authenticator
+4. helm
+5. terraform
+6. Any editor for manifest manipulaton
+
+
 ## Files and Folder Details
 
 
+### 1. namespaces.yaml
+It contains the manifest for all the namespaces requried in subsequent steps. 
 
+1. Create the namespaces using the command given below:
+```
+kubectl apply -f namespaces.yaml
+```
 
-### 1. aws
+2. Verify namespaces are created:
+```bash
+kubectl get namespaces
+```
+
+### 2. aws
 
 It contains the manifest regarding the cluster infrastructure. Detials of this folder is given below:
 
@@ -42,15 +67,9 @@ It contains the manifest regarding the cluster infrastructure. Detials of this f
 
 #### Deployment
 
-1. For the deployment of the above resource we need following tools/utilities
 
-    1. AWS account and a user configured.
-    
-    2. terraform (version: v0.12.21(for user creation), v0.11.14(for eks cluster creation)). Two version are required due to support for the manifests. This can be resolved by some research.
 
-    3. aws-iam-autheticator.
-
-    4. kubectl
+1. For the deployment of the above resource we need terraform (version: v0.12.21(for user creation), v0.11.14(for eks cluster creation)). Two version are required due to support for the manifests. This can be resolved by some research.
 
 2. Move inside the `users` folder and run the following command:
 
@@ -77,29 +96,205 @@ terraform apply # it will output the plan for resources creation and ask for per
 kubectl get nodes # it will output the cluster nodes based on the configuration provied in eks/main.tf file.
 ```
 
-### 2. mysql
+### 3. mysql
 
 It contains the manifest for mysql. Detials of this folder is given below:
 
 ```bash
 ├── mysql.yaml # it contains the manifest for the mysql
 └── secrets
-    └── mysql-passwords.yaml # it contains the configuration for the mysql database. It will be used in mysql.yaml file.
+    └── mysql-passwords.yaml # it contains the secret for the mysql database. It will be used in mysql.yaml file.
+```
+
+#### Deployment
+
+1. Move inside the secrets folder and create the mysql secret using the command given below:
+
+```bash
+kubectl apply -f mysql-passwords.yaml
+```
+
+2. Deploy the mysql database using the command given below:
+```bash
+kubectl apply -f mysql.yaml
+```
+
+3. Verify mysql is deployed:
+
+```bash
+kubectl get pods -n storage
+```
+
+### 4. monitoring
+
+It contains the manifest for the monitoring services. Detials of this folder is given below:
+
+```bash
+├── dashboard # it contains the manifests for the kubernetes dashboard
+│   ├── auth-delegator.yaml
+│   ├── auth-reader.yaml
+│   ├── eks-admin-service-account.yaml
+│   ├── metrics-apiservice.yaml
+│   ├── metrics-server-deployment.yaml
+│   ├── metrics-server-service.yaml
+│   └── resource-reader.yaml
+├── Makefile # it contains the instructions for the helm operator installation
+├── prometheus-operator # it contains the manifests for the prometheus operator operator
+│   ├── clusterrolebindings.yaml 
+│   ├── clusterrole.yaml
+│   ├── crds # crd required by prometheus operator
+│   │   ├── crd-alert-manager.yaml
+│   │   ├── crd-prometheus-rules.yaml
+│   │   ├── crd-prometheus.yaml
+│   │   └── crd-servicemonitor.yaml
+│   ├── grafana-dashboard  # grafana dashboard for elastic search
+│   │   └── elasticsearch.yaml
+│   ├── prometheus-operator.yaml # prometheus operator manifest
+│   └── secrets # secret required by alertmanager
+│       └── alertmanager-config.yaml
+└── tiller-rbac.yaml
+```
+
+#### Deployment
+
+
+1. Move inside the dashboard folder and run command to deploy resource required by dashboard:
+
+```bash
+kubectl apply -f .
+```
+
+2. Apply the dashboard manifests
+```bash
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-beta8/aio/deploy/recommended.yaml
+```
+
+3. Run the local proxy server to access the dashboard
+```bash
+kubectl proxy
+```
+
+4. Dashboard will be accessible on this url
+
+```bash
+http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/#!/login
+```
+
+5. Token to access the dashboard can be retrieved using the command given below:
+```bash
+kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep eks-admin | awk '{print $1}')
+```
+
+6. Create the rbac for tiller, it is required by the helm to install its server side componenet(tiller):
+```bash
+kubectl apply -f tiller-rbac.yaml
+```
+
+7. Run the Makefile's `install-helm` target to deploy the helm operator
+```bash
+make install-helm # wait for it
+```
+
+8. Move inside the prometheus-operator folder and create the cluster role and its binding
+
+```bash
+kubctl apply -f clusterrole.yaml
+kubectl apply -f clusterrolebindings.yaml
+```
+
+9. Create the CRDs required by prometheus-operator:
+```bash
+kubectl apply -f crds/.
+```
+
+10. Create the config map for the elasticsearch dashboard, it will loaded in grafana by its sidecar
+
+```bash
+kubectl apply -f grafana-dashboard/.
+```
+
+11. Now deploy the prometheus-operator:
+```bash
+kubectl apply -f prometheus-operator.yaml
+
+# it will deploy grafana, prometheus and alertmanager.
+```
+
+12. To expose the grafana, prometheus and alertmanager, we will change the service type of these tools from `ClusterIP` to `LoadBalancer`. This change is required due to the unavalibility of domain. Although the right methods would be to create an ingress for it.
+
+```bash
+kubectl get svc -n monitoring # it will print the services, no service will have an ExternalIP for now
+
+# to edit a service
+kubectl edit service <service-name-(in this case name of the grafana, alertmanager and prometheus service will be used)> -n monitoring
+
+# above command will open the service manifest in the vim editor(it might change on other system), just change the service type from ClusterIP to LoadBalancer.
+
+# to get the service again
+kubectl get svc -n monitoring # this time change service will have an External IP. Use the value to access the tool(grafana, prometheus and alertmanager).
+
 ```
 
 
 
-### 3. monitoring
-### 4. logging
-### 5. namespace.yaml
+### 5. logging
+
+This folder have the manifests for the logging services. Details of the folder is given below:
+
+```bash
+├── crds # crd required by the konfigurator
+│   └── crd-konfigurator.yaml
+├── elasticsearch-cluster-client.yaml
+├── elasticsearch-cluster-data.yaml
+├── elasticsearch-cluster-master.yaml
+├── elasticsearch-curator.yaml
+├── fluentd-es.yaml
+├── kibana.yaml
+├── konfigurator-template.yaml
+└── konfigurator.yaml
+```
+
+#### Deployment
+
+1. Create the crd
+```bash
+kubectl apply -f crds/.
+```
+
+2. Create the services required for logging
+```bash
+kubectl apply -f .
+```
+
+3. It will take a while before everything is deployed:
+```bash
+# to check
+kubectl get pods -n logging
+```
+
+4. To expose kibana, it service type needs to be changed from `ClusterIP` to `LoadBalancer`:
+```bash
+# to get the services
+kubectl get svc -n logging
+
+# to edit the service
+kubectl edit svc <kibana-service-name> -n logging
+
+# change the service type
+# to get the services
+kubectl get svc -n logging # use the value provided in ExternalIP column to access kibana
+```
 
 
 
+## PART-II
 
 
 
-deploy dashboard
+## Resource
+
+Following resource were used:
 
 https://docs.aws.amazon.com/eks/latest/userguide/dashboard-tutorial.html
-
 https://github.com/kubernetes-sigs/metrics-server/releases/tag/v0.2.1
+https://github.com/helm/charts/tree/master/stable/elasticsearch-exporter
