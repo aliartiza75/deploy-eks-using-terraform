@@ -291,18 +291,19 @@ kubectl get svc -n logging # use the value provided in ExternalIP column to acce
 
 - What problems did you encounter? How did you solve them?
 
-1. It didn't have a domain to expose the tools like grafana, prometheus etc. I used `LoadBalancer` service instead of `ClusterIP`.
+    1. It didn't have a domain to expose the tools like grafana, prometheus etc. I used `LoadBalancer` service instead of `ClusterIP`.
 
 - How would you setup backups for mysql in production?
-I will run a [sidecar container](https://github.com/stakater-docker/mysql-restore-backup) in the mysql pod. That will take the backup of the data in the mysql and push it on the AWS S3 bucket.
+
+    I will run a [sidecar container](https://github.com/stakater-docker/mysql-restore-backup) in the mysql pod. That will take the backup of the data in the mysql and push it on the AWS S3 bucket.
 
 - How would you setup failover of mysql for production in k8s? How many nodes?
 
-I would deploy a mysql cluster with atleast two nodes. The nodes needs to be deployed on different kubernetes cluster nodes. So that if one node goes down the other is available. Those node should also be spread across multiple avalibility zones. So that if one avalibility zone goes down the other is not affected. 
+    I would deploy a mysql cluster with atleast two nodes. The nodes needs to be deployed on different kubernetes cluster nodes. So that if one node goes down the other is available. Those node should also be spread across multiple avalibility zones. So that if one avalibility zone goes down the other is not affected. 
 
-Another things that can be done is to assign the mysql pods priority status so that due to some descheduling process(due to resource utilization process) in the cluster doesn't cause the redeployment of the pod on another node. 
+    Another things that can be done is to assign the mysql pods priority status so that due to some descheduling process(due to resource utilization process) in the cluster doesn't cause the redeployment of the pod on another node. 
 
-Another thing that can be done is by using the by adding few nodes in the cluster that are only assigned for high priority services like database. It can be ensured by using taint and tolerations.
+    Another thing that can be done is by using the by adding few nodes in the cluster that are only assigned for high priority services like database. It can be ensured by using taint and tolerations.
 
 
 ## REMAINING TASK
