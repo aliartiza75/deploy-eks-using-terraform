@@ -237,7 +237,7 @@ kubectl get svc -n monitoring # this time change service will have an External I
 
 13. An alert has been configured
 
-![alert](./images/alert.png)
+![alert](/images/alert.png)
 
 
 
