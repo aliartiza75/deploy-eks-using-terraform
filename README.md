@@ -157,7 +157,6 @@ It contains the manifest for the monitoring services. Detials of this folder is 
 
 #### Deployment
 
-
 1. Move inside the dashboard folder and run command to deploy resource required by dashboard:
 
 ```bash
@@ -235,12 +234,9 @@ kubectl get svc -n monitoring # this time change service will have an External I
 
 ```
 
-13. An alert has been configured
+13. An alert has been configured. I have intentionally configured this alert to be generated.
 
 ![alert](./images/alert.png)
-
-
-
 
 ### 5. logging
 
@@ -292,7 +288,23 @@ kubectl get svc -n logging # use the value provided in ExternalIP column to acce
 
 ### 6. es-to-prom-exporter
 
-This fode
+This folder contains the manifest to deploy the es metrics exporter. Details of the folder is given below:
+
+```bash
+└── es-to-prom-exoporter.yaml
+```
+
+#### Deployment
+
+1. To deploy the exporter run the command given below:
+
+```bash
+kubectl apply -f es-to-prom-exporter.yaml
+```
+
+2. It it is deployed correctly, a target will be added in the prometheus:
+![target](./images/target.png)
+
 
 
 ## PART-II
