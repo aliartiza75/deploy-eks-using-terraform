@@ -4,7 +4,7 @@
 
 This repository contains the mainfest of the trial task given by Payever team.
 
-## Details
+### Repository Structure
 
 The root repository contains the following files and folders.
 
@@ -18,12 +18,12 @@ The root repository contains the following files and folders.
 └── README.md
 ```
 
-### Files and Folder Details
+## Files and Folder Details
 
 
 
 
-#### 1. aws
+### 1. aws
 
 It contains the manifest regarding the cluster infrastructure. Detials of this folder is given below:
 
@@ -40,7 +40,7 @@ It contains the manifest regarding the cluster infrastructure. Detials of this f
     └── terraform.tfstate.backup # it contains the backup of terraform's state
 ```
 
-##### Deployment
+#### Deployment
 
 1. For the deployment of the above resource we need following tools/utilities
 
