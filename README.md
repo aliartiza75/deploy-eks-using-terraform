@@ -1,8 +1,8 @@
-# Payever DevOps Task
+# Deploy EKS Cluster Using Terraform
 
 ## Overview
 
-This repository contains the mainfest of the trial task given by Payever team.
+This repository contains the mainfests to deploy EKS cluster using Terrafrom and also enable monitoring, logging and deployment of MySQL server.
 
 ## PART-I
 
